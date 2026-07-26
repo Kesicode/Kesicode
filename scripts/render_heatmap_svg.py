@@ -93,8 +93,7 @@ def render(data):
 
     canvas_w = PAD + LEFT_LABEL_W + art_w + PAD
     stats_h = 42
-    HEADER_H = 36
-    canvas_h = PAD + HEADER_H + TOP_LABEL_H + art_h + stats_h
+    canvas_h = PAD + TOP_LABEL_H + art_h + stats_h
 
     css = f"""
 @keyframes cell {{
@@ -109,15 +108,10 @@ def render(data):
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{canvas_w}" height="{canvas_h}" '
         f'viewBox="0 0 {canvas_w} {canvas_h}" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">',
         f'<style>{css}</style>',
-        f'<rect x="0.5" y="0.5" width="{canvas_w-1}" height="{canvas_h-1}" rx="6" fill="{BG}" stroke="{FRAME}" stroke-width="1"/>',
+        f'<rect width="{canvas_w}" height="{canvas_h}" rx="6" fill="transparent"/>',
     ]
 
-    total = data["total_contributions"]
-    parts.append(f'<text x="{PAD}" y="{PAD + 14}" font-size="16" fill="{TEXT}">'
-                 f'<tspan font-weight="600">{total:,} contributions</tspan>'
-                 f'<tspan font-weight="400"> in the last year</tspan></text>')
-
-    grid_top = PAD + HEADER_H + TOP_LABEL_H
+    grid_top = PAD + TOP_LABEL_H
     grid_left = PAD + LEFT_LABEL_W
 
     for ci, label in month_labels:
@@ -144,17 +138,12 @@ def render(data):
                 f'<title>{date_s}: {count} contribution{plural}</title></rect>'
             )
 
-    # legend: Less [][][][][] More (bottom-right of the grid)
-    leg_y = grid_top + art_h + 16
-    leg_x = canvas_w - PAD - (len(PALETTE) * STEP + 65)
-    parts.append(f'<text x="{leg_x}" y="{leg_y + CELL*0.85:.1f}" fill="{MUTED}" font-size="12" text-anchor="end">Less</text>')
-    lx = leg_x + 8
-    for lvl, color in enumerate(PALETTE):
-        parts.append(f'<rect x="{lx}" y="{leg_y}" width="{CELL}" height="{CELL}" rx="2" fill="{color}"/>')
-        lx += STEP
-    parts.append(f'<text x="{lx + 4}" y="{leg_y + CELL*0.85:.1f}" fill="{MUTED}" font-size="12">More</text>')
-
-    parts.append(f'<text x="{PAD + 4}" y="{leg_y + CELL*0.85:.1f}" fill="{MUTED}" font-size="12">Learn how we count contributions</text>')
+    # Total contributions footer
+    leg_y = grid_top + art_h + 20
+    total = data["total_contributions"]
+    parts.append(f'<text x="{PAD}" y="{leg_y + CELL*0.85:.1f}" font-size="14" fill="{TEXT}">'
+                 f'<tspan font-weight="700">{total:,} contributions</tspan>'
+                 f'<tspan font-weight="700"> in the last year</tspan></text>')
 
     parts.append("</svg>")
     return "".join(parts)
