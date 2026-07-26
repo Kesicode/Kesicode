@@ -1,12 +1,14 @@
 <div align="center">
 
+<h3><code>kesi@github ~ $ ./contributions.sh</code></h3>
+
 <!-- animated contribution graph: real data, boxes reveal cell by cell
      (regenerated daily by .github/workflows/update-profile-art.yml) -->
 <img src="./contrib-heatmap.svg" width="860" alt="Kesicode's GitHub contribution graph" />
 
 <br>
 
-`kesi@github ~ $ whoami`
+<h3><code>kesi@github ~ $ whoami</code></h3>
 
 <!-- hero: monochrome ASCII portrait (types in) beside a neofetch-style info
      panel. regenerate portrait: python scripts/prep_photo.py <photo> &&
