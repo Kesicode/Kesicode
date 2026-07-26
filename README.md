@@ -5,8 +5,8 @@
      python scripts/make_ascii_svg.py ; info panel: python scripts/make_info_card.py -->
 <table>
 <tr>
-<td valign="top"><img src="./avi-ascii-v2.svg" height="420" alt="KASHINADH — ASCII portrait" /></td>
-<td valign="top"><img src="./info-card-v2.svg" height="420" alt="KASHINADH — experience, stack, highlights" /></td>
+<td valign="top"><img src="./avi-ascii.svg" height="420" alt="KASHINADH — ASCII portrait" /></td>
+<td valign="top"><img src="./info-card.svg" height="420" alt="KASHINADH — experience, stack, highlights" /></td>
 </tr>
 </table>
 

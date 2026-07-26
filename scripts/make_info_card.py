@@ -11,7 +11,7 @@ import html
 import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "..", "info-card-v2.svg")
+OUT = os.path.join(os.path.dirname(__file__), "..", "info-card.svg")
 STATIC = bool(os.environ.get("STATIC"))
 
 W, H = 480, 445
