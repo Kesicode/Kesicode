@@ -1,7 +1,5 @@
 <div align="center">
 
-`kesi@github ~ $ ./contributions.sh`
-
 <!-- animated contribution graph: real data, boxes reveal cell by cell
      (regenerated daily by .github/workflows/update-profile-art.yml) -->
 <img src="./contrib-heatmap.svg" width="860" alt="Kesicode's GitHub contribution graph" />

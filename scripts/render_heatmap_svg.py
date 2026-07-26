@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 """
 Render data/contributions.json (produced by fetch_contributions.py) as a proper
-GitHub-style contribution heatmap SVG: a grid of rounded, colored BOXES in the
-classic 53-week x 7-day calendar, revealed once with a diagonal line-after-line
-slide-down (CSS keyframes, plays on load then freezes -- no looping "glow"), a
-Less->More legend, and a real stats footer.
+GitHub-style contribution heatmap SVG that perfectly matches the native GitHub
+graph panel styling.
 
 Run by .github/workflows/update-profile-art.yml after fetch_contributions.py.
 """
@@ -19,22 +17,18 @@ OUT_PATH = os.path.join(HERE, "..", "contrib-heatmap.svg")
 # GitHub-ish green ramp: empty -> brightest. Level 5 is a brighter neon top end.
 PALETTE = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353", "#69f0a0"]
 
-CELL = 12
+CELL = 11
 GAP = 3
 STEP = CELL + GAP
-PAD = 22
-LEFT_LABEL_W = 30
+PAD = 24
+LEFT_LABEL_W = 32
 TOP_LABEL_H = 20
-TITLEBAR_H = 30
+TITLEBAR_H = 0
 
-BG = "#0a0e14"
-BG2 = "#0d1420"
-FRAME = "#1f6feb"
+BG = "#0d1117"
+FRAME = "#30363d"
 MUTED = "#7d8590"
-TEXT = "#e6edf3"
-ACCENT = "#22d3ee"
-GREEN = "#39d353"
-GOLD = "#f2cc60"
+TEXT = "#c9d1d9"
 
 # reveal timing (one-shot)
 COL_T = 0.018   # per-column delay contribution (left -> right sweep)
@@ -98,9 +92,8 @@ def render(data):
             break
 
     canvas_w = PAD + LEFT_LABEL_W + art_w + PAD
-    stats_h = 40
-    TITLEBAR_H = 0
-    canvas_h = TOP_LABEL_H + art_w/n_cols * 7 + stats_h + PAD
+    stats_h = 42
+    canvas_h = PAD + TOP_LABEL_H + art_h + stats_h
 
     css = f"""
 @keyframes cell {{
@@ -115,23 +108,19 @@ def render(data):
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{canvas_w}" height="{canvas_h}" '
         f'viewBox="0 0 {canvas_w} {canvas_h}" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">',
         f'<style>{css}</style>',
-        '<defs>'
-        f'<linearGradient id="hbg" x1="0" y1="0" x2="0" y2="1">'
-        f'<stop offset="0" stop-color="{BG2}"/><stop offset="1" stop-color="{BG}"/></linearGradient>'
-        '</defs>',
-        f'<rect width="{canvas_w}" height="{canvas_h}" rx="12" fill="transparent"/>',
+        f'<rect x="0.5" y="0.5" width="{canvas_w-1}" height="{canvas_h-1}" rx="6" fill="{BG}" stroke="{FRAME}" stroke-width="1"/>',
     ]
 
-    grid_top = TITLEBAR_H + TOP_LABEL_H
+    grid_top = PAD + TOP_LABEL_H
     grid_left = PAD + LEFT_LABEL_W
 
     for ci, label in month_labels:
         x = grid_left + ci * STEP
-        parts.append(f'<text x="{x}" y="{TITLEBAR_H + 14}" fill="{MUTED}" font-size="10">{label}</text>')
+        parts.append(f'<text x="{x}" y="{PAD + 10}" fill="{TEXT}" font-size="12">{label}</text>')
 
     for wi, wname in [(1, "Mon"), (3, "Wed"), (5, "Fri")]:
-        y = grid_top + wi * STEP + CELL * 0.78
-        parts.append(f'<text x="{PAD}" y="{y:.1f}" fill="{MUTED}" font-size="9">{wname}</text>')
+        y = grid_top + wi * STEP + CELL * 0.8
+        parts.append(f'<text x="{PAD}" y="{y:.1f}" fill="{TEXT}" font-size="12">{wname}</text>')
 
     # the boxes -- each a rounded rect, diagonal slide-down reveal (once, freeze)
     for ci, column in enumerate(grid):
@@ -144,35 +133,22 @@ def render(data):
             delay = ci * COL_T + ri * ROW_T
             plural = "s" if count != 1 else ""
             parts.append(
-                f'<rect class="c" x="{gx}" y="{gy}" width="{CELL}" height="{CELL}" rx="2.5" '
+                f'<rect class="c" x="{gx}" y="{gy}" width="{CELL}" height="{CELL}" rx="2" '
                 f'fill="{PALETTE[lvl]}" style="animation-delay:{delay:.3f}s">'
                 f'<title>{date_s}: {count} contribution{plural}</title></rect>'
             )
 
     # legend: Less [][][][][] More (bottom-right of the grid)
-    leg_y = grid_top + art_h + 6
-    leg_x = canvas_w - PAD - (len(PALETTE) * (CELL - 1) + 70)
-    parts.append(f'<text x="{leg_x}" y="{leg_y + CELL*0.8:.1f}" fill="{MUTED}" font-size="10" text-anchor="end">Less</text>')
+    leg_y = grid_top + art_h + 16
+    leg_x = canvas_w - PAD - (len(PALETTE) * STEP + 65)
+    parts.append(f'<text x="{leg_x}" y="{leg_y + CELL*0.85:.1f}" fill="{MUTED}" font-size="12" text-anchor="end">Less</text>')
     lx = leg_x + 8
     for lvl, color in enumerate(PALETTE):
-        parts.append(f'<rect x="{lx}" y="{leg_y}" width="{CELL-1}" height="{CELL-1}" rx="2.2" fill="{color}"/>')
-        lx += CELL
-    parts.append(f'<text x="{lx + 4}" y="{leg_y + CELL*0.8:.1f}" fill="{MUTED}" font-size="10">More</text>')
+        parts.append(f'<rect x="{lx}" y="{leg_y}" width="{CELL}" height="{CELL}" rx="2" fill="{color}"/>')
+        lx += STEP
+    parts.append(f'<text x="{lx + 4}" y="{leg_y + CELL*0.85:.1f}" fill="{MUTED}" font-size="12">More</text>')
 
-    sep_y = leg_y + CELL + 14
-    parts.append(f'<line x1="0" y1="{sep_y}" x2="{canvas_w}" y2="{sep_y}" stroke="{FRAME}" stroke-opacity="0.25"/>')
-
-    cs = data["current_streak"]["length"]
-    ls = data["longest_streak"]["length"]
-    total = data["total_contributions"]
-    best = data["best_day"]
-    rng = data["range"]
-
-    ly = sep_y + 24
-    # left column: big highlighted numbers; right column: context in muted
-    parts.append(f'<text x="{PAD}" y="{ly}" font-size="13" fill="{TEXT}">'
-                 f'<tspan font-weight="700">{total:,}</tspan>'
-                 f' contributions in the last year</text>')
+    parts.append(f'<text x="{PAD + 4}" y="{leg_y + CELL*0.85:.1f}" fill="{MUTED}" font-size="12">Learn how we count contributions</text>')
 
     parts.append("</svg>")
     return "".join(parts)
