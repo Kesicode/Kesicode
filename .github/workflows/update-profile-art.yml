@@ -37,3 +37,6 @@ jobs:
         with:
           commit_message: "chore: refresh contribution graph [skip ci]"
           file_pattern: "data/contributions.json contrib-heatmap.svg"
+          commit_user_name: Kesicode
+          commit_user_email: blindkesi@gmail.com
+          commit_author: Kesicode <blindkesi@gmail.com>
