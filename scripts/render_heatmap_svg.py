@@ -141,9 +141,8 @@ def render(data):
     # Total contributions footer
     leg_y = grid_top + art_h + 20
     total = data["total_contributions"]
-    parts.append(f'<text x="{PAD}" y="{leg_y + CELL*0.85:.1f}" font-size="14" fill="{TEXT}">'
-                 f'<tspan font-weight="700">{total:,} contributions</tspan>'
-                 f'<tspan font-weight="700"> in the last year</tspan></text>')
+    parts.append(f'<text x="{PAD}" y="{leg_y + CELL*0.85:.1f}" font-size="14" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif">'
+                 f'<tspan font-weight="600">{total:,} contributions in the last year</tspan></text>')
 
     parts.append("</svg>")
     return "".join(parts)
