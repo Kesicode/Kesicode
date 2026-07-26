@@ -31,9 +31,9 @@ MUTED = "#7d8590"
 TEXT = "#c9d1d9"
 
 # reveal timing (one-shot)
-COL_T = 0.018   # per-column delay contribution (left -> right sweep)
-ROW_T = 0.045   # per-row delay contribution (top -> bottom cascade)
-CELL_DUR = 0.42
+COL_T = 0.035   # per-column delay contribution (left -> right sweep)
+ROW_T = 0.080   # per-row delay contribution (top -> bottom cascade)
+CELL_DUR = 0.65
 
 
 def level_for(count):
