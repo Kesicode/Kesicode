@@ -93,7 +93,8 @@ def render(data):
 
     canvas_w = PAD + LEFT_LABEL_W + art_w + PAD
     stats_h = 42
-    canvas_h = PAD + TOP_LABEL_H + art_h + stats_h
+    HEADER_H = 36
+    canvas_h = PAD + HEADER_H + TOP_LABEL_H + art_h + stats_h
 
     css = f"""
 @keyframes cell {{
@@ -111,7 +112,12 @@ def render(data):
         f'<rect x="0.5" y="0.5" width="{canvas_w-1}" height="{canvas_h-1}" rx="6" fill="{BG}" stroke="{FRAME}" stroke-width="1"/>',
     ]
 
-    grid_top = PAD + TOP_LABEL_H
+    total = data["total_contributions"]
+    parts.append(f'<text x="{PAD}" y="{PAD + 14}" font-size="16" fill="{TEXT}">'
+                 f'<tspan font-weight="600">{total:,} contributions</tspan>'
+                 f'<tspan font-weight="400"> in the last year</tspan></text>')
+
+    grid_top = PAD + HEADER_H + TOP_LABEL_H
     grid_left = PAD + LEFT_LABEL_W
 
     for ci, label in month_labels:
