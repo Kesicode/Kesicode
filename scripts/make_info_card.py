@@ -43,6 +43,7 @@ ROWS = [
     ("kv", "Role", "Chairperson @ IEEE IAS SBC CEK"),
     ("kv", "Also", "Embedded Systems • Full-Stack Developer"),
     ("kv", "Focus", "Hardware + AI + IoT"),
+    ("kv", "Portfolio", "kashinadh.com"),
     ("gap",),
     ("sec", "Stack"),
     ("kv", "Hardware", "ESP32, STM32, Arduino, PCB Design, KiCad"),
