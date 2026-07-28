@@ -44,7 +44,7 @@ SECTION_WHOAMI_INFOCARD = """<h3><code>kesi@github ~ $ whoami --info</code></h3>
 <table>
 <tr>
 <td valign="top"><img src="./kesi-ascii.svg" width="338" height="340" alt="KASHINADH — ASCII portrait" /></td>
-<td valign="top"><img src="./info-card.svg" width="367" height="340" alt="KASHINADH — Info Card" /></td>
+<td valign="top"><img src="./info-card.svg" width="488" height="340" alt="KASHINADH — Info Card" /></td>
 </tr>
 </table>"""
 
