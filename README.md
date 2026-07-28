@@ -28,9 +28,9 @@
 
 <br>
 
-## KASHINADH
+<h3><code>kesi@github ~ $ ./links.sh</code></h3>
 
-**Hardware · Software · AI Engineer**
+<p><b>Hardware · Software · AI Engineer</b></p>
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-kashinadh.com-0d1117?style=for-the-badge&logo=vercel&logoColor=white)](https://www.kashinadh.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-k--s--kashinadh-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/k-s-kashinadh)
