@@ -14,12 +14,12 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(os.path.dirname(__file__), "..", "info-card.svg")
 STATIC = bool(os.environ.get("STATIC"))
 
-W, H = 480, 425
+W, H = 480, 465
 PAD = 20
 TITLEBAR_H = 30
 KEY_X = PAD
 VAL_X = PAD + 92
-LINE_H = 20.5
+LINE_H = 20.8
 
 BG = "#0d1117"
 BG2 = "#111722"
@@ -32,11 +32,6 @@ GREEN = "#3fb950"
 ACCENT = "#22d3ee"
 
 # content model: tuples describing each row
-# ("host",)                    -> "kesi@github" + rule
-# ("kv", key, value)           -> orange key + light value
-# ("sec", title)               -> blue "— title —" rule
-# ("bul", text)                -> green dot + light text
-# ("gap",)                     -> vertical space
 ROWS = [
     ("host",),
     ("kv", "Now", "B.Tech ECE @ CE Kidangoor"),
@@ -57,6 +52,7 @@ ROWS = [
     ("bul", "Building AI-powered IoT & Embedded Systems"),
     ("bul", "Founder of VAZA"),
     ("bul", "Hardware × Software × AI Enthusiast"),
+    ("bul", "Open for Collaborations & Tech Consulting"),
 ]
 
 
@@ -83,8 +79,8 @@ def rise(inner, i):
 
 parts = [
     '<?xml version="1.0" encoding="utf-8"?>',
-    f'<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 {W} {H}" '
-    f'preserveAspectRatio="xMidYMid meet" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">',
+    f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
+    f'font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">',
     '<defs>'
     f'<linearGradient id="ibg" x1="0" y1="0" x2="0" y2="1">'
     f'<stop offset="0" stop-color="{BG2}"/><stop offset="1" stop-color="{BG}"/></linearGradient></defs>',
