@@ -8,7 +8,7 @@
 <table>
 <tr>
 <td valign="top"><img src="./kesi-ascii.svg" width="338" height="340" alt="KASHINADH — ASCII portrait" /></td>
-<td valign="top"><img src="./wordmark.svg" width="486" height="340" alt="KESI — 3D ASCII wordmark" /></td>
+<td valign="top"><img src="./wordmark.svg" width="488" height="340" alt="KESI — 3D ASCII wordmark" /></td>
 </tr>
 </table>
 
