@@ -10,12 +10,6 @@
 <td valign="top"><img src="./kesi-ascii.svg" width="424" height="427" alt="KASHINADH — ASCII portrait" /></td>
 <td valign="top"><img src="./wordmark.svg" width="486" height="427" alt="KESI — 3D ASCII wordmark" /></td>
 </tr>
-<tr>
-<td colspan="2" align="center">
-<!-- neofetch-style info panel. regenerate: python scripts/make_info_card.py -->
-<img src="./info-card.svg" height="427" alt="KASHINADH — experience, stack, highlights" />
-</td>
-</tr>
 </table>
 
 <br>
