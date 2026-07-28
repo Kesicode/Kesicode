@@ -1,11 +1,11 @@
 name: Update profile art
 
 # Refreshes the contribution graph SVG from real data.
-# Runs twice daily (6 AM and 6 PM UTC), plus whenever you push to main.
+# Runs 4 times daily (00:00, 06:00, 12:00, and 18:00 UTC), plus whenever you push to main.
 
 "on":
   schedule:
-    - cron: "0 6,18 * * *"   # 06:00 and 18:00 UTC every day
+    - cron: "0 0,6,12,18 * * *"   # 00:00, 06:00, 12:00, and 18:00 UTC every day
   push:
     branches: [main]
 
