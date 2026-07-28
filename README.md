@@ -20,10 +20,6 @@
 </tr>
 </table>
 
-<br>
-
-<h3><code>kesi@github ~ $ ./wordmark.sh --3d</code></h3>
-
 <img src="./wordmark.svg" alt="KESI — 3D ASCII wordmark" />
 
 <br>
