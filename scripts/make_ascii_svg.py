@@ -23,19 +23,19 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "..", "source-prepped.png")
 OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "..", "kesi-ascii.svg")
 
-COLS = 100
-ROWS = 53
-CELL_W = 3.84
-CELL_H = 6.547
+COLS = 120
+ROWS = 65
+CELL_W = 3.2
+CELL_H = 5.46
 RAMP = " .`:-=+*cs#%@"  # bright(sparse) -> dark(dense); leading space clears bg
 
 # the prepped image already has bg removed + CLAHE local contrast, so only
 # light global tuning is needed here.
-CONTRAST = 1.05
+CONTRAST = 1.15
 BRIGHTNESS = 1.0
-GAMMA = 1.18          # >1 brightens mids -> face lands in sparser chars
-SHARPEN = False
-WHITE_FLOOR = 0.80    # luminance above this is forced to blank (space)
+GAMMA = 1.08          # closer to 1.0 keeps more midtone detail in the face
+SHARPEN = True        # sharpen edges for crisper ASCII
+WHITE_FLOOR = 0.82    # luminance above this is forced to blank (space)
 
 PAD = 20
 TITLEBAR_H = 30
