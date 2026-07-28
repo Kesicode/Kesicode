@@ -25,8 +25,8 @@ OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "..", "kesi-ascii
 
 COLS = 100
 ROWS = 53
-CELL_W = 4.4
-CELL_H = 6.88
+CELL_W = 3.84
+CELL_H = 6.547
 RAMP = " .`:-=+*cs#%@"  # bright(sparse) -> dark(dense); leading space clears bg
 
 # the prepped image already has bg removed + CLAHE local contrast, so only
@@ -42,8 +42,8 @@ TITLEBAR_H = 30
 STATUS_H = 30
 ART_W = COLS * CELL_W
 ART_H = ROWS * CELL_H
-CANVAS_W = 480
-CANVAS_H = 445
+CANVAS_W = 424
+CANVAS_H = 427
 
 BG = "#0d1117"
 BG2 = "#111722"

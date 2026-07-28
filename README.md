@@ -15,7 +15,7 @@
      python scripts/make_ascii_svg.py ; info panel: python scripts/make_info_card.py -->
 <table>
 <tr>
-<td valign="top"><img src="./kesi-ascii.svg" height="420" alt="KASHINADH — ASCII portrait" /></td>
+<td valign="top"><img src="./kesi-ascii.svg" width="424" height="427" alt="KASHINADH — ASCII portrait" /></td>
 <td valign="top"><img src="./info-card.svg" height="420" alt="KASHINADH — experience, stack, highlights" /></td>
 </tr>
 </table>
