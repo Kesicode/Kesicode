@@ -8,12 +8,11 @@ Dynamically updates README.md based on time of day or mode argument:
       ASCII Portrait + 3D Wordmark on top, Contribution graph on bottom.
 
 Usage:
-  python scripts/rotate_readme_layout.py [--mode day|night|auto|random]
+  python scripts/rotate_readme_layout.py [--mode day|night|auto]
 """
 
 import sys
 import datetime
-import random
 import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -44,7 +43,7 @@ SECTION_WHOAMI_INFOCARD = """<h3><code>kesi@github ~ $ whoami --info</code></h3>
 <table>
 <tr>
 <td valign="top"><img src="./kesi-ascii.svg" width="338" height="340" alt="KASHINADH — ASCII portrait" /></td>
-<td valign="top"><img src="./info-card.svg" width="488" height="340" alt="KASHINADH — Info Card" /></td>
+<td valign="top"><img src="./info-card.svg" width="367" height="340" alt="KASHINADH — Info Card" /></td>
 </tr>
 </table>"""
 
@@ -96,9 +95,7 @@ def get_mode_from_args_or_time() -> str:
         if arg == "--mode" and i + 1 < len(sys.argv):
             mode = sys.argv[i + 1].lower()
 
-    if mode == "random":
-        return random.choice(["day", "night"])
-    elif mode in ("day", "night"):
+    if mode in ("day", "night"):
         return mode
     else:
         # auto based on current UTC hour
