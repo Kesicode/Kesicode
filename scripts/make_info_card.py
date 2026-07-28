@@ -14,7 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(os.path.dirname(__file__), "..", "info-card.svg")
 STATIC = bool(os.environ.get("STATIC"))
 
-W, H = 480, 445
+W, H = 638, 445
 PAD = 20
 TITLEBAR_H = 30
 KEY_X = PAD
