@@ -14,7 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(os.path.dirname(__file__), "..", "info-card.svg")
 STATIC = bool(os.environ.get("STATIC"))
 
-W, H = 480, 445
+W, H = 480, 425
 PAD = 20
 TITLEBAR_H = 30
 KEY_X = PAD
@@ -83,8 +83,8 @@ def rise(inner, i):
 
 parts = [
     '<?xml version="1.0" encoding="utf-8"?>',
-    f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
-    f'font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">',
+    f'<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 {W} {H}" '
+    f'preserveAspectRatio="xMidYMid meet" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">',
     '<defs>'
     f'<linearGradient id="ibg" x1="0" y1="0" x2="0" y2="1">'
     f'<stop offset="0" stop-color="{BG2}"/><stop offset="1" stop-color="{BG}"/></linearGradient></defs>',
