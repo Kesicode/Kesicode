@@ -7,8 +7,8 @@
      python scripts/make_ascii_svg.py ; wordmark: python scripts/make_wordmark_svg.py -->
 <table>
 <tr>
-<td valign="top"><img src="./kesi-ascii.svg" width="424" height="427" alt="KASHINADH — ASCII portrait" /></td>
-<td valign="top"><img src="./wordmark.svg" width="486" height="427" alt="KESI — 3D ASCII wordmark" /></td>
+<td valign="top"><img src="./kesi-ascii.svg" width="338" height="340" alt="KASHINADH — ASCII portrait" /></td>
+<td valign="top"><img src="./wordmark.svg" width="486" height="340" alt="KESI — 3D ASCII wordmark" /></td>
 </tr>
 </table>
 
