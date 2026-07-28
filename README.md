@@ -1,26 +1,30 @@
 <div align="center">
 
+<h3><code>kesi@github ~ $ whoami</code></h3>
+
+<!-- hero: monochrome ASCII portrait (types in) beside the 3D rocking wordmark.
+     regenerate portrait: python scripts/prep_photo.py <photo> &&
+     python scripts/make_ascii_svg.py ; wordmark: python scripts/make_wordmark_svg.py -->
+<table>
+<tr>
+<td valign="top"><img src="./kesi-ascii.svg" width="424" height="427" alt="KASHINADH — ASCII portrait" /></td>
+<td valign="top"><img src="./wordmark.svg" width="486" height="427" alt="KESI — 3D ASCII wordmark" /></td>
+</tr>
+<tr>
+<td colspan="2" align="center">
+<!-- neofetch-style info panel. regenerate: python scripts/make_info_card.py -->
+<img src="./info-card.svg" height="427" alt="KASHINADH — experience, stack, highlights" />
+</td>
+</tr>
+</table>
+
+<br>
+
 <h3><code>kesi@github ~ $ ./contributions.sh</code></h3>
 
 <!-- animated contribution graph: real data, boxes reveal cell by cell
      (regenerated daily by .github/workflows/update-profile-art.yml) -->
 <img src="./contrib-heatmap.svg" width="860" alt="Kesicode's GitHub contribution graph" />
-
-<br>
-
-<h3><code>kesi@github ~ $ whoami</code></h3>
-
-<!-- hero: monochrome ASCII portrait (types in) beside a neofetch-style info
-     panel. regenerate portrait: python scripts/prep_photo.py <photo> &&
-     python scripts/make_ascii_svg.py ; info panel: python scripts/make_info_card.py -->
-<table>
-<tr>
-<td valign="top"><img src="./kesi-ascii.svg" width="424" height="427" alt="KASHINADH — ASCII portrait" /></td>
-<td valign="top"><img src="./info-card.svg" height="420" alt="KASHINADH — experience, stack, highlights" /></td>
-</tr>
-</table>
-
-<img src="./wordmark.svg" alt="KESI — 3D ASCII wordmark" />
 
 <br>
 
@@ -34,4 +38,3 @@
 [![Live Terminal](https://img.shields.io/badge/⚡_Live_Terminal-Kesicode.github.io-22d3ee?style=for-the-badge&logo=gnometerminal&logoColor=black)](https://Kesicode.github.io)
 
 </div>
-
