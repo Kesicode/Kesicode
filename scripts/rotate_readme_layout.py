@@ -1,14 +1,14 @@
 """
 rotate_readme_layout.py
 
-Dynamically updates README.md based on time of day or mode argument:
-  - Day mode (06:00 - 17:59 UTC):
-      Contribution graph on top, ASCII Portrait + Neofetch Info Card on bottom.
-  - Night mode (18:00 - 05:59 UTC):
-      ASCII Portrait + 3D Wordmark on top, Contribution graph on bottom.
+Dynamically updates README.md across 4 daily schedules (00:00, 06:00, 12:00, 18:00 UTC):
+  1. Midnight (00:00 - 05:59 UTC): Heatmap top + Portrait & Info Card bottom.
+  2. Morning  (06:00 - 11:59 UTC): Portrait & 3D Wordmark top + Heatmap bottom.
+  3. Noon     (12:00 - 17:59 UTC): Info Card & 3D Wordmark top + Heatmap & Portrait bottom.
+  4. Evening  (18:00 - 23:59 UTC): Portrait & Info Card top + 3D Wordmark & Heatmap bottom.
 
 Usage:
-  python scripts/rotate_readme_layout.py [--mode day|night|auto]
+  python scripts/rotate_readme_layout.py [--mode midnight|morning|noon|evening|auto]
 """
 
 import sys
@@ -47,6 +47,24 @@ SECTION_WHOAMI_INFOCARD = """<h3><code>kesi@github ~ $ whoami --info</code></h3>
 </tr>
 </table>"""
 
+SECTION_INFOCARD_WORDMARK = """<h3><code>kesi@github ~ $ neofetch</code></h3>
+
+<!-- hero: neofetch info card beside 3D wordmark -->
+<table>
+<tr>
+<td valign="top"><img src="./info-card.svg" width="367" height="340" alt="KASHINADH — Info Card" /></td>
+<td valign="top"><img src="./wordmark.svg" width="488" height="340" alt="KESI — 3D ASCII wordmark" /></td>
+</tr>
+</table>"""
+
+SECTION_PORTRAIT_CENTERED = """<h3><code>kesi@github ~ $ ./portrait.sh</code></h3>
+
+<img src="./kesi-ascii.svg" width="338" height="340" alt="KASHINADH — ASCII portrait" />"""
+
+SECTION_WORDMARK_CENTERED = """<h3><code>kesi@github ~ $ ./wordmark.sh --3d</code></h3>
+
+<img src="./wordmark.svg" width="488" height="340" alt="KESI — 3D ASCII wordmark" />"""
+
 SECTION_CONTRIBUTIONS = """<h3><code>kesi@github ~ $ ./contributions.sh</code></h3>
 
 <!-- animated contribution graph: real data -->
@@ -54,8 +72,8 @@ SECTION_CONTRIBUTIONS = """<h3><code>kesi@github ~ $ ./contributions.sh</code></
 
 
 def build_readme(mode: str) -> str:
-    if mode == "day":
-        # Day mode: Heatmap on top, Portrait + Info Card on bottom
+    if mode == "midnight":
+        # 00:00 - 05:59 UTC: Heatmap top, Portrait + Info Card bottom
         content = f"""<div align="center">
 
 {SECTION_CONTRIBUTIONS}
@@ -70,11 +88,51 @@ def build_readme(mode: str) -> str:
 
 </div>
 """
-    else:
-        # Night mode: Portrait + Wordmark on top, Heatmap on bottom
+    elif mode == "morning":
+        # 06:00 - 11:59 UTC: Portrait + 3D Wordmark top, Heatmap bottom
         content = f"""<div align="center">
 
 {SECTION_WHOAMI_WORDMARK}
+
+<br>
+
+{SECTION_CONTRIBUTIONS}
+
+<br>
+
+{HEADER_LINKS}
+
+</div>
+"""
+    elif mode == "noon":
+        # 12:00 - 17:59 UTC: Info Card + Wordmark top, Heatmap & Portrait bottom
+        content = f"""<div align="center">
+
+{SECTION_INFOCARD_WORDMARK}
+
+<br>
+
+{SECTION_CONTRIBUTIONS}
+
+<br>
+
+{SECTION_PORTRAIT_CENTERED}
+
+<br>
+
+{HEADER_LINKS}
+
+</div>
+"""
+    else:
+        # evening (18:00 - 23:59 UTC): Portrait + Info Card top, 3D Wordmark & Heatmap bottom
+        content = f"""<div align="center">
+
+{SECTION_WHOAMI_INFOCARD}
+
+<br>
+
+{SECTION_WORDMARK_CENTERED}
 
 <br>
 
@@ -95,16 +153,19 @@ def get_mode_from_args_or_time() -> str:
         if arg == "--mode" and i + 1 < len(sys.argv):
             mode = sys.argv[i + 1].lower()
 
-    if mode in ("day", "night"):
+    if mode in ("midnight", "morning", "noon", "evening"):
         return mode
     else:
         # auto based on current UTC hour
         hour = datetime.datetime.now(datetime.timezone.utc).hour
-        # Day hours: 06:00 to 17:59 UTC
-        if 6 <= hour < 18:
-            return "day"
+        if 0 <= hour < 6:
+            return "midnight"
+        elif 6 <= hour < 12:
+            return "morning"
+        elif 12 <= hour < 18:
+            return "noon"
         else:
-            return "night"
+            return "evening"
 
 
 def main():
@@ -118,3 +179,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
