@@ -75,7 +75,7 @@ svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewB
 <rect width="{W}" height="{H}" fill="none"/>
 {''.join(labels)}
 {''.join(rects)}
-<text class="total" x="{LEFT}" y="{H-6}">{total:,} contributions in the last year</text>
+<text class="total" x="{LEFT}" y="{H-6}" font-weight="bold">{total:,} contributions in the last year</text>
 </svg>'''
 
 open(OUT, "w").write(svg)
