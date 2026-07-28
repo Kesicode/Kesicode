@@ -87,9 +87,9 @@ art_top = TITLEBAR_H + PAD * 0.35
 parts = []
 parts.append('<?xml version="1.0" encoding="utf-8"?>')
 parts.append(
-    f'<svg xmlns="http://www.w3.org/2000/svg" width="{CANVAS_W}" height="{CANVAS_H}" '
-    f'viewBox="0 0 {CANVAS_W} {CANVAS_H}" font-family="ui-monospace, SFMono-Regular, '
-    f'Menlo, Consolas, monospace">'
+    f'<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" '
+    f'viewBox="0 0 {CANVAS_W} {CANVAS_H}" preserveAspectRatio="xMidYMid meet" '
+    f'font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">'
 )
 parts.append('<defs>'
              f'<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">'

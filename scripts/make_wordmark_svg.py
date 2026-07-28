@@ -242,9 +242,9 @@ def emit(frames, mode, out, dur, reveal):
     n = len(frames)
 
     p = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{canvas_w:.0f}" height="{canvas_h:.0f}" '
-        f'viewBox="0 0 {canvas_w:.0f} {canvas_h:.0f}" font-family="ui-monospace, SFMono-Regular, '
-        f'Menlo, Consolas, monospace">',
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" '
+        f'viewBox="0 0 {canvas_w:.0f} {canvas_h:.0f}" preserveAspectRatio="xMidYMid meet" '
+        f'font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">',
         '<defs><linearGradient id="wbg" x1="0" y1="0" x2="0" y2="1">'
         f'<stop offset="0" stop-color="{BG2}"/><stop offset="1" stop-color="{BG}"/>'
         '</linearGradient></defs>',
