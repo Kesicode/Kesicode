@@ -29,6 +29,9 @@ jobs:
       - name: Scrape real contribution data (no auth needed)
         run: python scripts/fetch_contributions.py
 
+      - name: Render animated streak SVG
+        run: python scripts/generate_streak_svg.py Kesicode contrib-heatmap.svg
+
       - name: Render contribution graph SVG (boxes)
         run: python scripts/render_heatmap_svg.py
 
@@ -37,6 +40,3 @@ jobs:
         with:
           commit_message: "chore: refresh contribution graph [skip ci]"
           file_pattern: "data/contributions.json contrib-heatmap.svg"
-          commit_user_name: Kesicode
-          commit_user_email: kashinadh.work@gmail.com
-          commit_author: Kesicode <kashinadh.work@gmail.com>
