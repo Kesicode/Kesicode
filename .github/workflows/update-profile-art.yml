@@ -34,8 +34,11 @@ jobs:
       - name: Render contribution graph SVG (boxes)
         run: python scripts/render_heatmap_svg.py
 
+      - name: Rotate README layout based on time of day
+        run: python scripts/rotate_readme_layout.py
+
       - name: Commit updated art
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: refresh contribution graph [skip ci]"
-          file_pattern: "data/contributions.json contrib-heatmap.svg"
+          commit_message: "chore: refresh contribution graph & rotate layout [skip ci]"
+          file_pattern: "data/contributions.json contrib-heatmap.svg README.md"
