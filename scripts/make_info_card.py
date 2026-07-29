@@ -14,7 +14,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(os.path.dirname(__file__), "..", "info-card.svg")
 STATIC = bool(os.environ.get("STATIC"))
 
-W, H = 448, 455
+W, H = 448, 437
 PAD = 20
 TITLEBAR_H = 30
 KEY_X = PAD
@@ -38,7 +38,6 @@ ROWS = [
     ("kv", "Role", "Chairperson @ IEEE IAS SBC CEK"),
     ("kv", "Also", "Embedded Systems • Full-Stack Developer"),
     ("kv", "Focus", "Hardware + AI + IoT"),
-    ("kv", "Portfolio", "kashinadh.com"),
     ("gap",),
     ("sec", "Stack"),
     ("kv", "Hardware", "ESP32, STM32, Arduino, PCB Design, KiCad"),
