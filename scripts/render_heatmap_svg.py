@@ -12,7 +12,7 @@ import os
 
 HERE = os.path.dirname(__file__)
 IN_PATH = os.path.join(HERE, "..", "data", "contributions.json")
-OUT_PATH = os.path.join(HERE, "..", "contrib-heatmap.svg")
+OUT_PATH = os.path.join(HERE, "..", "contrib-heatmap-box.svg")
 
 # GitHub-ish green ramp: empty -> brightest. Level 5 is a brighter neon top end.
 PALETTE = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353", "#69f0a0"]
