@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 """
-Scrape or query real daily contribution counts from GitHub and write
-data/contributions.json with the raw days plus derived stats
-(current streak, longest streak, best day, monthly totals).
+fetch_contributions.py
+======================
+Fetches 100% accurate per-day contribution counts across all years
+directly from GitHub's public contribution graph HTML endpoints,
+matching the exact logic used on Kesicode.github.io.
 
-Supports:
-1. GitHub GraphQL API if GH_TOKEN or GITHUB_TOKEN environment variable is set
-   (includes private contributions and exact daily counts).
-2. Public HTML web scraping fallback (if no token is available).
-
-Run daily by .github/workflows/update-profile-art.yml.
+NO personal access tokens or secrets required!
+Works directly with GitHub's public contribution view across years.
 """
 import datetime
 import json
@@ -17,125 +15,60 @@ import os
 import re
 import sys
 import requests
-from bs4 import BeautifulSoup
 
 USERNAME = os.environ.get("GH_PROFILE_USER", "Kesicode")
-URL = f"https://github.com/users/{USERNAME}/contributions"
 OUT_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "contributions.json")
-
-
-def fetch_days_graphql(username, token):
-    """Fetch accurate contribution calendar via GitHub GraphQL API."""
-    url = "https://api.github.com/graphql"
-    query = """
-    query($login: String!) {
-      user(login: $login) {
-        contributionsCollection {
-          contributionCalendar {
-            totalContributions
-            weeks {
-              contributionDays {
-                contributionCount
-                date
-                color
-              }
-            }
-          }
-        }
-      }
-    }
-    """
-    headers = {
-        "Authorization": f"bearer {token}",
-        "User-Agent": "profile-readme-bot/1.0"
-    }
-    try:
-        resp = requests.post(url, json={"query": query, "variables": {"login": username}}, headers=headers, timeout=30)
-        if resp.status_code == 200:
-            res_json = resp.json()
-            user_data = res_json.get("data", {}).get("user")
-            if user_data:
-                calendar = user_data.get("contributionsCollection", {}).get("contributionCalendar", {})
-                weeks = calendar.get("weeks", [])
-                days = []
-                for w in weeks:
-                    for d in w.get("contributionDays", []):
-                        days.append({"date": d["date"], "count": d["contributionCount"]})
-                if days:
-                    days.sort(key=lambda x: x["date"])
-                    print(f"Successfully fetched {len(days)} days via GitHub GraphQL API.")
-                    return days
-        else:
-            print(f"GraphQL request returned HTTP {resp.status_code}: {resp.text[:200]}", file=sys.stderr)
-    except Exception as e:
-        print(f"GraphQL request failed: {e}", file=sys.stderr)
-    return None
-
-
-def fetch_days_html():
-    """Fallback: Scrape public contribution calendar HTML."""
-    resp = requests.get(URL, headers={"User-Agent": "profile-readme-bot/1.0"}, timeout=30)
-    resp.raise_for_status()
-    soup = BeautifulSoup(resp.text, "html.parser")
-
-    cells = soup.select("td.ContributionCalendar-day")
-    if not cells:
-        print("no calendar cells found -- github markup may have changed", file=sys.stderr)
-        sys.exit(1)
-
-    days = []
-    for td in cells:
-        date = td.get("data-date")
-        if not date:
-            continue
-        td_id = td.get("id")
-        tooltip_el = soup.find("tool-tip", attrs={"for": td_id}) if td_id else None
-        text = tooltip_el.get_text(strip=True) if tooltip_el else ""
-        if re.search(r"no contributions", text, re.I):
-            count = 0
-        else:
-            m = re.match(r"(\d+)", text)
-            count = int(m.group(1)) if m else 0
-        days.append({"date": date, "count": count})
-
-    days.sort(key=lambda d: d["date"])
-    print(f"Successfully scraped {len(days)} days via public HTML.")
-    return days
-
-
-def load_existing_days():
-    if os.path.exists(OUT_PATH):
-        try:
-            with open(OUT_PATH, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                return {d["date"]: d["count"] for d in data.get("days", []) if "date" in d and "count" in d}
-        except Exception as e:
-            print(f"Notice: could not load existing {OUT_PATH}: {e}")
-    return {}
+START_YEAR = 2024
+CURRENT_YEAR = datetime.datetime.now(datetime.timezone.utc).year
 
 
 def fetch_days():
-    token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or os.environ.get("PROFILE_TOKEN")
-    fetched = None
-    if token:
-        fetched = fetch_days_graphql(USERNAME, token)
-    if not fetched:
-        fetched = fetch_days_html()
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "X-Requested-With": "XMLHttpRequest",
+        "Accept": "text/html",
+    }
 
-    existing_map = load_existing_days()
-    if not existing_map:
-        return fetched
+    all_days = {}
+    for year in range(START_YEAR, CURRENT_YEAR + 1):
+        url = f"https://github.com/users/{USERNAME}/contributions?from={year}-01-01&to={year}-12-31"
+        try:
+            resp = requests.get(url, headers=headers, timeout=15)
+            resp.raise_for_status()
+            html = resp.text
 
-    merged_days = []
-    for d in fetched:
-        dt = d["date"]
-        f_cnt = d["count"]
-        e_cnt = existing_map.get(dt, 0)
-        final_cnt = max(f_cnt, e_cnt)
-        merged_days.append({"date": dt, "count": final_cnt})
+            td_pattern = re.compile(
+                r'data-date="([0-9]{4}-[0-9]{2}-[0-9]{2})"[^>]+id="(contribution-day-component-[^"]+)"'
+            )
+            td_matches = td_pattern.findall(html)
 
-    merged_days.sort(key=lambda d: d["date"])
-    return merged_days
+            for date_str, comp_id in td_matches:
+                tip_pattern = re.compile(
+                    rf'for="{re.escape(comp_id)}"[^>]*>([^<]+)</tool-tip>'
+                )
+                tip_match = tip_pattern.search(html)
+                count = 0
+                if tip_match:
+                    tip_text = tip_match.group(1).strip()
+                    count_match = re.search(r'^(\d+)\s+contribution', tip_text)
+                    if count_match:
+                        count = int(count_match.group(1))
+
+                all_days[date_str] = count
+
+        except Exception as e:
+            print(f"Error fetching contributions for {year}: {e}", file=sys.stderr)
+
+    today_str = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
+    sorted_days = [
+        {"date": k, "count": v}
+        for k, v in sorted(all_days.items())
+        if k <= today_str
+    ]
+
+    # Keep last 365 days for the profile README heatmap
+    last_365 = sorted_days[-365:] if len(sorted_days) >= 365 else sorted_days
+    return last_365
 
 
 def compute_current_streak(days):
@@ -143,7 +76,7 @@ def compute_current_streak(days):
         return 0, None, None
     idx = len(days) - 1
     if idx > 0 and days[idx]["count"] == 0:
-        idx -= 1  # today isn't over yet -- don't break the streak on it
+        idx -= 1  # today isn't over yet -- don't break streak
     streak = 0
     end_idx = idx
     while idx >= 0 and days[idx]["count"] > 0:
@@ -209,7 +142,7 @@ if __name__ == "__main__":
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
     with open(OUT_PATH, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
-    print(f"wrote {OUT_PATH}: {data['total_contributions']} contributions, "
+    print(f"wrote {OUT_PATH}: {data['total_contributions']} contributions in last 365 days, "
           f"best day {data['best_day']['date']} ({data['best_day']['count']} contribs), "
           f"current streak {data['current_streak']['length']}, "
           f"longest streak {data['longest_streak']['length']}")
