@@ -141,8 +141,18 @@ def render(data):
     # Total contributions footer
     leg_y = grid_top + art_h + 20
     total = data["total_contributions"]
+    start_s = data.get("range", {}).get("start", "")
+    end_s = data.get("range", {}).get("end", "")
+    range_str = ""
+    if start_s and end_s:
+        s_dt = datetime.date.fromisoformat(start_s).strftime("%b %d, %Y")
+        e_dt = datetime.date.fromisoformat(end_s).strftime("%b %d, %Y")
+        range_str = f"{s_dt} &#8211; {e_dt}"
+
     parts.append(f'<text x="{PAD}" y="{leg_y + CELL*0.85:.1f}" font-size="14" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif">'
                  f'<tspan font-weight="600">{total:,} contributions in the last year</tspan></text>')
+    if range_str:
+        parts.append(f'<text x="{canvas_w - PAD}" y="{leg_y + CELL*0.85:.1f}" font-size="12" fill="{MUTED}" text-anchor="end" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif">{range_str}</text>')
 
     parts.append("</svg>")
     return "".join(parts)
