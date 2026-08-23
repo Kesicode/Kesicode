@@ -5,7 +5,8 @@ name: Update profile art
 
 "on":
   schedule:
-    - cron: "0 0,6,12,18 * * *"   # 00:00, 06:00, 12:00, and 18:00 UTC every day
+    - cron: "0 * * * *"   # Runs automatically every hour
+  workflow_dispatch: {}  # Allows on-demand triggers from GitHub Actions UI or webhook
   push:
     branches: [main]
 
