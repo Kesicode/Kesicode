@@ -103,13 +103,39 @@ def fetch_days_html():
     return days
 
 
+def load_existing_days():
+    if os.path.exists(OUT_PATH):
+        try:
+            with open(OUT_PATH, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                return {d["date"]: d["count"] for d in data.get("days", []) if "date" in d and "count" in d}
+        except Exception as e:
+            print(f"Notice: could not load existing {OUT_PATH}: {e}")
+    return {}
+
+
 def fetch_days():
     token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or os.environ.get("PROFILE_TOKEN")
+    fetched = None
     if token:
-        days = fetch_days_graphql(USERNAME, token)
-        if days:
-            return days
-    return fetch_days_html()
+        fetched = fetch_days_graphql(USERNAME, token)
+    if not fetched:
+        fetched = fetch_days_html()
+
+    existing_map = load_existing_days()
+    if not existing_map:
+        return fetched
+
+    merged_days = []
+    for d in fetched:
+        dt = d["date"]
+        f_cnt = d["count"]
+        e_cnt = existing_map.get(dt, 0)
+        final_cnt = max(f_cnt, e_cnt)
+        merged_days.append({"date": dt, "count": final_cnt})
+
+    merged_days.sort(key=lambda d: d["date"])
+    return merged_days
 
 
 def compute_current_streak(days):
