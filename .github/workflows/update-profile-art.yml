@@ -25,8 +25,10 @@ jobs:
       - name: Install dependencies
         run: pip install -r scripts/requirements.txt
 
-      - name: Scrape real contribution data (no auth needed)
+      - name: Fetch real contribution data (via GraphQL API or fallback HTML)
         run: python scripts/fetch_contributions.py
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Render animated streak SVG
         run: python scripts/generate_streak_svg.py Kesicode contrib-heatmap.svg
