@@ -4,7 +4,7 @@ rotate_readme_layout.py
 Dynamically updates README.md across 4 daily schedules (00:00, 06:00, 12:00, 18:00 UTC):
   1. Midnight (00:00 - 05:59 UTC): Heatmap top + Portrait & Info Card bottom.
   2. Morning  (06:00 - 11:59 UTC): Portrait & 3D Wordmark top + Heatmap bottom.
-  3. Noon     (12:00 - 17:59 UTC): Info Card & 3D Wordmark top + Heatmap & Portrait bottom.
+  3. Noon     (12:00 - 17:59 UTC): Info Card & 3D Wordmark top + Heatmap & Stats bottom.
   4. Evening  (18:00 - 23:59 UTC): Portrait & Info Card top + 3D Wordmark & Heatmap bottom.
 
 Usage:
@@ -56,10 +56,6 @@ SECTION_INFOCARD_WORDMARK = """<h3><code>kesi@github ~ $ neofetch</code></h3>
 <td valign="top"><img src="./wordmark.svg" width="488" height="340" alt="KESI — 3D ASCII wordmark" /></td>
 </tr>
 </table>"""
-
-SECTION_PORTRAIT_CENTERED = """<h3><code>kesi@github ~ $ ./portrait.sh</code></h3>
-
-<img src="./kesi-ascii.svg" width="338" height="340" alt="KASHINADH — ASCII portrait" />"""
 
 SECTION_WORDMARK_CENTERED = """<h3><code>kesi@github ~ $ ./wordmark.sh --3d</code></h3>
 
@@ -123,7 +119,7 @@ def build_readme(mode: str) -> str:
 </div>
 """
     elif mode == "noon":
-        # 12:00 - 17:59 UTC: Info Card + Wordmark top, Heatmap & Stats & Portrait bottom
+        # 12:00 - 17:59 UTC: Info Card + Wordmark top, Heatmap & Stats bottom
         content = f"""<div align="center">
 
 {SECTION_INFOCARD_WORDMARK}
@@ -135,10 +131,6 @@ def build_readme(mode: str) -> str:
 <br>
 
 {SECTION_STATS}
-
-<br>
-
-{SECTION_PORTRAIT_CENTERED}
 
 <br>
 

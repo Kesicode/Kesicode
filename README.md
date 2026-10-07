@@ -31,12 +31,6 @@
 
 <br>
 
-<h3><code>kesi@github ~ $ ./portrait.sh</code></h3>
-
-<img src="./kesi-ascii.svg" width="338" height="340" alt="KASHINADH — ASCII portrait" />
-
-<br>
-
 <h3><code>kesi@github ~ $ ./links.sh</code></h3>
 
 <p><b>Hardware · Software · AI Engineer</b></p>
