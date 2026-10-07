@@ -70,13 +70,27 @@ SECTION_CONTRIBUTIONS = """<h3><code>kesi@github ~ $ ./contributions.sh</code></
 <!-- animated contribution graph: real data -->
 <img src="./contrib-heatmap.svg" width="860" alt="Kesicode's GitHub contribution graph" />"""
 
+SECTION_STATS = """<h3><code>kesi@github ~ $ ./stats.sh</code></h3>
+
+<!-- animated stats & streak card: real data, auto-refreshed daily -->
+<table>
+<tr>
+<td valign="top"><img src="./kesi-ascii.svg" width="420" alt="KASHINADH — ASCII portrait" /></td>
+<td valign="top"><img src="./stats.svg" width="420" alt="Kesicode GitHub stats — auto-refreshed daily" /></td>
+</tr>
+</table>"""
+
 
 def build_readme(mode: str) -> str:
     if mode == "midnight":
-        # 00:00 - 05:59 UTC: Heatmap top, Portrait + Info Card bottom
+        # 00:00 - 05:59 UTC: Heatmap top, Stats card, Portrait + Info Card bottom
         content = f"""<div align="center">
 
 {SECTION_CONTRIBUTIONS}
+
+<br>
+
+{SECTION_STATS}
 
 <br>
 
@@ -89,7 +103,7 @@ def build_readme(mode: str) -> str:
 </div>
 """
     elif mode == "morning":
-        # 06:00 - 11:59 UTC: Portrait + 3D Wordmark top, Heatmap bottom
+        # 06:00 - 11:59 UTC: Portrait + 3D Wordmark top, Heatmap + Stats bottom
         content = f"""<div align="center">
 
 {SECTION_WHOAMI_WORDMARK}
@@ -100,12 +114,16 @@ def build_readme(mode: str) -> str:
 
 <br>
 
+{SECTION_STATS}
+
+<br>
+
 {HEADER_LINKS}
 
 </div>
 """
     elif mode == "noon":
-        # 12:00 - 17:59 UTC: Info Card + Wordmark top, Heatmap & Portrait bottom
+        # 12:00 - 17:59 UTC: Info Card + Wordmark top, Heatmap & Stats & Portrait bottom
         content = f"""<div align="center">
 
 {SECTION_INFOCARD_WORDMARK}
@@ -113,6 +131,10 @@ def build_readme(mode: str) -> str:
 <br>
 
 {SECTION_CONTRIBUTIONS}
+
+<br>
+
+{SECTION_STATS}
 
 <br>
 
@@ -125,7 +147,7 @@ def build_readme(mode: str) -> str:
 </div>
 """
     else:
-        # evening (18:00 - 23:59 UTC): Portrait + Info Card top, 3D Wordmark & Heatmap bottom
+        # evening (18:00 - 23:59 UTC): Portrait + Info Card top, 3D Wordmark & Heatmap & Stats bottom
         content = f"""<div align="center">
 
 {SECTION_WHOAMI_INFOCARD}
@@ -137,6 +159,10 @@ def build_readme(mode: str) -> str:
 <br>
 
 {SECTION_CONTRIBUTIONS}
+
+<br>
+
+{SECTION_STATS}
 
 <br>
 
