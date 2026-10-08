@@ -1,11 +1,12 @@
 """
 rotate_readme_layout.py
 
-Dynamically updates README.md across 4 daily schedules (00:00, 06:00, 12:00, 18:00 UTC):
-  1. Midnight (00:00 - 05:59 UTC): Heatmap top + Portrait & Info Card bottom.
-  2. Morning  (06:00 - 11:59 UTC): Portrait & 3D Wordmark top + Heatmap bottom.
-  3. Noon     (12:00 - 17:59 UTC): Info Card & 3D Wordmark top + Heatmap & Stats bottom.
-  4. Evening  (18:00 - 23:59 UTC): Portrait & Info Card top + 3D Wordmark & Heatmap bottom.
+Dynamically updates README.md across 4 daily schedules (00:00, 06:00, 12:00, 18:00 UTC)
+using a streamlined 3-section layout (Top Hero, Bottom Section, Footer Links):
+  1. Midnight (00:00 - 05:59 UTC): Heatmap top + Portrait & Stats bottom + Footer
+  2. Morning  (06:00 - 11:59 UTC): Portrait & 3D Wordmark top + Heatmap bottom + Footer
+  3. Noon     (12:00 - 17:59 UTC): Info Card & 3D Wordmark top + Portrait & Stats bottom + Footer
+  4. Evening  (18:00 - 23:59 UTC): Portrait & Info Card top + Heatmap bottom + Footer
 
 Usage:
   python scripts/rotate_readme_layout.py [--mode midnight|morning|noon|evening|auto]
@@ -79,7 +80,7 @@ SECTION_STATS = """<h3><code>kesi@github ~ $ ./stats.sh</code></h3>
 
 def build_readme(mode: str) -> str:
     if mode == "midnight":
-        # 00:00 - 05:59 UTC: Heatmap top, Stats card, Portrait + Info Card bottom
+        # 00:00 - 05:59 UTC: Heatmap top + Portrait & Stats bottom + Footer
         content = f"""<div align="center">
 
 {SECTION_CONTRIBUTIONS}
@@ -90,16 +91,12 @@ def build_readme(mode: str) -> str:
 
 <br>
 
-{SECTION_WHOAMI_INFOCARD}
-
-<br>
-
 {HEADER_LINKS}
 
 </div>
 """
     elif mode == "morning":
-        # 06:00 - 11:59 UTC: Portrait + 3D Wordmark top, Heatmap + Stats bottom
+        # 06:00 - 11:59 UTC: Portrait & 3D Wordmark top + Heatmap bottom + Footer
         content = f"""<div align="center">
 
 {SECTION_WHOAMI_WORDMARK}
@@ -110,23 +107,15 @@ def build_readme(mode: str) -> str:
 
 <br>
 
-{SECTION_STATS}
-
-<br>
-
 {HEADER_LINKS}
 
 </div>
 """
     elif mode == "noon":
-        # 12:00 - 17:59 UTC: Info Card + Wordmark top, Heatmap & Stats bottom
+        # 12:00 - 17:59 UTC: Info Card & 3D Wordmark top + Portrait & Stats bottom + Footer
         content = f"""<div align="center">
 
 {SECTION_INFOCARD_WORDMARK}
-
-<br>
-
-{SECTION_CONTRIBUTIONS}
 
 <br>
 
@@ -139,22 +128,14 @@ def build_readme(mode: str) -> str:
 </div>
 """
     else:
-        # evening (18:00 - 23:59 UTC): Portrait + Info Card top, 3D Wordmark & Heatmap & Stats bottom
+        # evening (18:00 - 23:59 UTC): Portrait & Info Card top + Heatmap bottom + Footer
         content = f"""<div align="center">
 
 {SECTION_WHOAMI_INFOCARD}
 
 <br>
 
-{SECTION_WORDMARK_CENTERED}
-
-<br>
-
 {SECTION_CONTRIBUTIONS}
-
-<br>
-
-{SECTION_STATS}
 
 <br>
 
