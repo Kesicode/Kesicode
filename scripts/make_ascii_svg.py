@@ -23,27 +23,27 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "..", "source-prepped.png")
 OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "..", "kesi-ascii.svg")
 
-COLS = 120
-ROWS = 65
+COLS = 160          # more columns = sharper horizontal detail (Avi's reference ≈160)
 CELL_W = 3.2
 CELL_H = 5.46
-RAMP = " .`:-=+*cs#%@"  # bright(sparse) -> dark(dense); leading space clears bg
+ROWS = int(COLS * CELL_W / CELL_H * 1.35)   # auto rows: match source aspect ratio better
+RAMP = " .`',:;-=+*iIcsCS#%@"  # 22-level ramp: more gradation in mid-tones & shadows
 
-# the prepped image already has bg removed + CLAHE local contrast, so only
-# light global tuning is needed here.
-CONTRAST = 1.15
+# push contrast and gamma hard so facial features fill their character slots
+CONTRAST   = 1.55   # strong global contrast to make edges pop
 BRIGHTNESS = 1.0
-GAMMA = 1.08          # closer to 1.0 keeps more midtone detail in the face
-SHARPEN = True        # sharpen edges for crisper ASCII
-WHITE_FLOOR = 0.82    # luminance above this is forced to blank (space)
+GAMMA      = 0.78   # < 1.0 darkens midtones → face fills more of the ramp's dark half
+SHARPEN    = True   # unsharp-mask to crisp up glasses frames and hair edges
+WHITE_FLOOR = 0.72  # luminance above this → blank (lower = fewer blank spots on face)
 
-PAD = 20
+PAD        = 20
 TITLEBAR_H = 30
-STATUS_H = 30
-ART_W = COLS * CELL_W
-ART_H = ROWS * CELL_H
-CANVAS_W = 424
-CANVAS_H = 427
+STATUS_H   = 30
+ART_W  = COLS * CELL_W
+ART_H  = ROWS * CELL_H
+# auto-size canvas to fit the higher-res art
+CANVAS_W = int(ART_W + PAD * 2)
+CANVAS_H = int(TITLEBAR_H + ART_H + STATUS_H + PAD)
 
 BG = "#0d1117"
 BG2 = "#111722"

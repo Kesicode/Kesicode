@@ -28,13 +28,20 @@ cut = remove(Image.open(INP).convert("RGBA"))
 rgb = np.array(cut.convert("RGB"))
 alpha = np.array(cut.split()[-1])                 # 0 = background
 
-# 2. local-contrast the luminance (CLAHE)
+# 1b. bilateral filter to sharpen edges while keeping skin smooth
+rgb = cv2.bilateralFilter(rgb, d=9, sigmaColor=50, sigmaSpace=50)
+
+# 2. local-contrast the luminance (CLAHE) — stronger clip for more face detail
 gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
-clahe = cv2.createCLAHE(clipLimit=2.6, tileGridSize=(8, 8))
+clahe = cv2.createCLAHE(clipLimit=4.0, tileGridSize=(6, 6))
 gray = clahe.apply(gray)
 
-# a touch of global lift so the face sits in the sparse end of the ramp
-gray = cv2.convertScaleAbs(gray, alpha=1.05, beta=18)
+# apply a second mild CLAHE pass at finer tile to pull out micro-detail (glasses, eyes)
+clahe2 = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(4, 4))
+gray = clahe2.apply(gray)
+
+# global scale: slightly boost contrast, minimal lift so darks stay dark
+gray = cv2.convertScaleAbs(gray, alpha=1.15, beta=8)
 
 # 3. paste onto white using the alpha mask (feathered a hair to avoid a halo)
 mask = (alpha.astype(np.float32) / 255.0)
