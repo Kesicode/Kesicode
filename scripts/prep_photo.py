@@ -61,5 +61,42 @@ if coords is not None:
     h = min(out.shape[0] - y, h + margin * 2)
     out = out[y:y+h, x:x+w]
 
+# 5. ── Glasses / eye zone targeted enhancement ─────────────────────────────
+# The glasses frames and eyes need extra separation. Apply aggressive
+# sharpening + micro-tile CLAHE only to the y = 30%–53% vertical band,
+# then feather-blend it back so no hard seam appears at the boundaries.
+h_img, w_img = out.shape
+ey0 = int(h_img * 0.30)   # top of glasses band
+ey1 = int(h_img * 0.53)   # bottom of glasses band (covers frames + eyes)
+
+band = out[ey0:ey1, :].astype(np.float32)
+
+# a) Aggressive unsharp mask: makes glass frames snap to black, pupils pop
+blur_band = cv2.GaussianBlur(band, (0, 0), 1.2)
+sharp_band = np.clip(band * 3.0 - blur_band * 2.0, 0, 255).astype(np.uint8)
+
+# b) Micro-tile CLAHE on the sharpened band (2×2 tiles catch tiny frame edges)
+clahe_eye = cv2.createCLAHE(clipLimit=7.0, tileGridSize=(2, 2))
+enhanced_band = clahe_eye.apply(sharp_band)
+
+# c) Second very-fine CLAHE pass to deepen the lens-vs-frame contrast further
+clahe_eye2 = cv2.createCLAHE(clipLimit=3.5, tileGridSize=(2, 2))
+enhanced_band = clahe_eye2.apply(enhanced_band)
+
+# d) Feather blend at top+bottom 18% of the band to avoid a hard edge seam
+feather = int((ey1 - ey0) * 0.18)
+alpha_mask = np.ones((ey1 - ey0, w_img), dtype=np.float32)
+for i in range(feather):
+    t = i / feather                          # 0.0 → 1.0
+    alpha_mask[i, :]              = t        # fade in at top
+    alpha_mask[ey1 - ey0 - 1 - i, :] = t   # fade in at bottom
+
+out[ey0:ey1, :] = np.clip(
+    enhanced_band.astype(np.float32) * alpha_mask
+    + out[ey0:ey1, :].astype(np.float32) * (1.0 - alpha_mask),
+    0, 255
+).astype(np.uint8)
+# ─────────────────────────────────────────────────────────────────────────────
+
 Image.fromarray(out, mode="L").save(OUT)
 print("wrote", OUT, out.shape)
