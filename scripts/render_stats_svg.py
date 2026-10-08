@@ -156,20 +156,31 @@ slot      = (plot_r - plot_l) / len(monthly)
 bar_w     = slot * 0.62
 peak      = max(m["total"] for m in monthly) or 1
 
+peak_idx  = max(range(len(monthly)), key=lambda i: monthly[i]["total"])
+
 for i, m in enumerate(monthly):
     bar_h_px = max(2, (m["total"] / peak) * (plot_bot - plot_top))
     bx = plot_l + i * slot + (slot - bar_w) / 2
     by = plot_bot - bar_h_px
     delay = BAR_START + i * BAR_STAGGER
+    is_peak = (i == peak_idx)
+    bar_color = "#3fe06a" if is_peak else BAR   # bright green on peak bar
     # month label
     label = datetime.date.fromisoformat(m["month"] + "-01").strftime("%b")
     parts.append(
         f'<rect class="b" x="{bx:.1f}" y="{by:.1f}" width="{bar_w:.1f}" height="{bar_h_px:.1f}" '
-        f'rx="3" fill="{BAR}" style="animation-delay:{delay:.2f}s"/>'
+        f'rx="3" fill="{bar_color}" style="animation-delay:{delay:.2f}s"/>'
     )
     parts.append(
         f'<text x="{bx + bar_w/2:.1f}" y="{plot_bot + 18}" fill="{MUTED}" font-size="11" text-anchor="middle">{label}</text>'
     )
+    # floating count label above the peak bar only
+    if is_peak:
+        count_label = f"{m['total']:,}"
+        parts.append(
+            f'<text x="{bx + bar_w/2:.1f}" y="{by - 6:.1f}" '
+            f'fill="{INK}" font-size="13" font-weight="700" text-anchor="middle">{count_label}</text>'
+        )
 
 parts.append("</svg>")
 svg = "".join(parts)
