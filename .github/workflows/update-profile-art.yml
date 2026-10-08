@@ -1,11 +1,11 @@
 name: Update profile art
 
 # Refreshes the contribution graph SVG from real data.
-# Runs 4 times daily (00:00, 06:00, 12:00, and 18:00 UTC), plus whenever you push to main.
+# Runs every hour (UTC), plus whenever you push to main or trigger manually.
 
 "on":
   schedule:
-    - cron: "0 * * * *"   # Runs automatically every hour
+    - cron: "0 * * * *"   # Every hour
   workflow_dispatch: {}  # Allows on-demand triggers from GitHub Actions UI or webhook
   push:
     branches: [main]
@@ -47,4 +47,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: refresh contribution graph & rotate layout [skip ci]"
-          file_pattern: "data/contributions.json contrib-heatmap.svg contrib-heatmap-box.svg stats.svg scripts/contrib.json README.md"
+          file_pattern: "data/contributions.json contrib-heatmap.svg contrib-heatmap-box.svg stats.svg README.md"
