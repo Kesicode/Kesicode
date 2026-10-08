@@ -88,10 +88,9 @@ art_top = TITLEBAR_H + PAD * 0.35
 
 # ---- 2. assemble SVG ------------------------------------------------------
 parts = []
-parts.append('<?xml version="1.0" encoding="utf-8"?>')
 parts.append(
-    f'<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" '
-    f'viewBox="0 0 {CANVAS_W} {CANVAS_H}" preserveAspectRatio="xMidYMid meet" '
+    f'<svg xmlns="http://www.w3.org/2000/svg" width="{CANVAS_W}" height="{CANVAS_H}" '
+    f'viewBox="0 0 {CANVAS_W} {CANVAS_H}" '
     f'font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">'
 )
 parts.append('<defs>'
@@ -143,7 +142,7 @@ status_y = status_line_y + 19
 parts.append(f'<line x1="0" y1="{status_line_y:.1f}" x2="{CANVAS_W}" y2="{status_line_y:.1f}" stroke="{FRAME}"/>')
 parts.append(f'<text x="{PAD}" y="{status_y:.1f}" fill="{TITLE_TEXT}" font-size="13">'
              f'kesi@github:~$ whoami <tspan fill="{INK}">KASHINADH</tspan></text>')
-parts.append(f'<rect x="{PAD+222}" y="{status_y-12:.1f}" width="8" height="14" fill="{INK}">'
+parts.append(f'<rect x="{PAD+224}" y="{status_y-12:.1f}" width="8" height="14" fill="{INK}">'
              f'<animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.5;0.51;1" '
              f'dur="1s" repeatCount="indefinite"/></rect>')
 
