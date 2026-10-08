@@ -23,10 +23,13 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "..", "source-prepped.png")
 OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "..", "kesi-ascii.svg")
 
-COLS = 160          # more columns = sharper horizontal detail (Avi's reference ≈160)
+COLS = 160          # more columns = sharper horizontal detail
 CELL_W = 3.2
 CELL_H = 5.46
-ROWS = int(COLS * CELL_W / CELL_H * 1.35)   # auto rows: match source aspect ratio better
+# ROWS: compensate for monospace cell aspect ratio so a square source stays square.
+# Each character is CELL_H/CELL_W ≈ 1.71× taller than wide, so we need fewer rows.
+# Multiply by source aspect (≈1.0 for our portrait) — NO extra stretch factor.
+ROWS = int(COLS * CELL_W / CELL_H)            # ≈ 94 rows → square-ish canvas
 RAMP = " .`',:;-=+*iIcsCS#%@"  # 22-level ramp: more gradation in mid-tones & shadows
 
 # push contrast and gamma hard so facial features fill their character slots
@@ -41,7 +44,7 @@ TITLEBAR_H = 30
 STATUS_H   = 30
 ART_W  = COLS * CELL_W
 ART_H  = ROWS * CELL_H
-# auto-size canvas to fit the higher-res art
+# canvas sized to snugly fit the art (now roughly square like Avi's reference)
 CANVAS_W = int(ART_W + PAD * 2)
 CANVAS_H = int(TITLEBAR_H + ART_H + STATUS_H + PAD)
 
@@ -49,8 +52,8 @@ BG = "#0d1117"
 BG2 = "#111722"
 FRAME = "#30363d"
 TITLE_TEXT = "#7d8590"
-INK = "#c9d1d9"      # the single ascii color (matches Andrew6rant)
-CURSOR = "#c9d1d9"
+INK    = "#ffffff"   # pure white → maximum brightness & contrast on dark bg
+CURSOR = "#ffffff"
 
 # ---- reveal timing (one-shot; a cursor rasters top -> bottom) -------------
 ROW_DUR = 0.11
