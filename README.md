@@ -1,23 +1,5 @@
 <div align="center">
 
-<h3><code>kesi@github ~ $ whoami --info</code></h3>
-
-<!-- hero: monochrome ASCII portrait beside neofetch info card -->
-<table>
-<tr>
-<td valign="top"><img src="./kesi-ascii.svg" width="338" height="340" alt="KASHINADH — ASCII portrait" /></td>
-<td valign="top"><img src="./info-card.svg" width="335" height="340" alt="KASHINADH — Info Card" /></td>
-</tr>
-</table>
-
-<br>
-
-<h3><code>kesi@github ~ $ ./wordmark.sh --3d</code></h3>
-
-<img src="./wordmark.svg" width="488" height="340" alt="KESI — 3D ASCII wordmark" />
-
-<br>
-
 <h3><code>kesi@github ~ $ ./contributions.sh</code></h3>
 
 <!-- animated contribution graph: real data -->
@@ -32,6 +14,18 @@
 <tr>
 <td valign="top"><img src="./kesi-ascii.svg" width="420" alt="KASHINADH — ASCII portrait" /></td>
 <td valign="top"><img src="./stats.svg" width="420" alt="Kesicode GitHub stats — auto-refreshed daily" /></td>
+</tr>
+</table>
+
+<br>
+
+<h3><code>kesi@github ~ $ whoami --info</code></h3>
+
+<!-- hero: monochrome ASCII portrait beside neofetch info card -->
+<table>
+<tr>
+<td valign="top"><img src="./kesi-ascii.svg" width="338" height="340" alt="KASHINADH — ASCII portrait" /></td>
+<td valign="top"><img src="./info-card.svg" width="335" height="340" alt="KASHINADH — Info Card" /></td>
 </tr>
 </table>
 
