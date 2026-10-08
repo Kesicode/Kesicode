@@ -1,0 +1,50 @@
+name: Batch repo heartbeat
+
+# Rotates through ALL Kesicode repos in batches of 5, committing a small
+# LAST_ACTIVE.md heartbeat file to each one to keep contributions spread
+# across all projects on the GitHub heatmap.
+#
+# Runs 4x daily (offset from the main hourly art workflow) to spread
+# contributions throughout the day at different timestamps.
+#
+# ⚠  REQUIRES: GH_PAT secret with "repo" scope.
+#    Go to: Settings → Secrets → Actions → New repository secret
+#    Name: GH_PAT   Value: <your personal access token>
+#
+# Rotation state is saved to data/batch_state.json (auto-committed back here).
+
+"on":
+  schedule:
+    - cron: "0 2,8,14,20 * * *"   # 4× daily: 02:00, 08:00, 14:00, 20:00 UTC
+  workflow_dispatch: {}            # Manual trigger from GitHub Actions UI
+
+permissions:
+  contents: write
+
+jobs:
+  batch-touch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout profile repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}   # needs write access to commit state file
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run batch commit rotation
+        run: python scripts/batch_commit.py
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+
+      - name: Commit updated batch state to profile repo
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: advance batch rotation [skip ci]"
+          file_pattern: "data/batch_state.json"
