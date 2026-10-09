@@ -29,7 +29,8 @@ jobs:
       - name: Fetch real contribution data (via GraphQL API or fallback HTML)
         run: python scripts/fetch_contributions.py
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN || secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.GH_PAT }}          # primary — full repo scope, best accuracy
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # fallback if GH_PAT not set
 
       - name: Render animated streak SVG
         run: python scripts/generate_streak_svg.py Kesicode contrib-heatmap.svg
