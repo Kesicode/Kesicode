@@ -107,46 +107,60 @@ def graphql_range(username: str, token: str, from_date: datetime.date, to_date: 
 
 def fetch_days_graphql(username: str, token: str) -> list[dict] | None:
     """
-    Build an exact 365-day sliding window ending today.
+    Build a contribution window that EXACTLY matches GitHub's heatmap display.
 
-    GitHub's contributionsCollection is silently capped at its internal
-    "contribution year" boundaries (roughly Oct → Oct). To handle a window
-    that crosses that boundary we fire TWO queries:
-      - Query A: 365 days ago → today          (current contribution year slice)
-      - Query B: 366 days ago → 365 days ago   (previous contribution year slice)
-    Then merge and build the exact 365-day list day by day.
+    GitHub's "contributions in the last year" count covers the grid from the
+    Sunday of the week 52 weeks ago through today. That start Sunday is EARLIER
+    than a naive "today - 364 days" calculation (by up to 6 days), which caused
+    our total to be 5-6 contributions short of GitHub's displayed number.
+
+    Fix:
+      1. Find the Sunday of the week containing (today - 52 weeks).
+      2. Fetch from that Sunday → today (exact GitHub window).
+      3. Always run a second query for the prior contribution year to bridge
+         the GitHub Oct→Oct boundary.
     """
-    today      = datetime.datetime.now(datetime.timezone.utc).date()
-    start_365  = today - datetime.timedelta(days=364)   # 365 days incl. today
-    prev_start = today - datetime.timedelta(days=395)   # 30-day buffer before window
+    today        = datetime.datetime.now(datetime.timezone.utc).date()
 
-    print(f"GraphQL A: {start_365} → {today}")
-    batch_a = graphql_range(username, token, start_365, today)
+    # Step 1: GitHub heatmap start = Sunday of the week 52 weeks ago
+    weeks_52_ago      = today - datetime.timedelta(weeks=52)
+    # Python weekday(): Mon=0 … Sun=6.  Days since last Sunday = (weekday+1) % 7
+    days_since_sunday = (weeks_52_ago.weekday() + 1) % 7
+    github_start      = weeks_52_ago - datetime.timedelta(days=days_since_sunday)
+
+    # Buffer: go 14 days further back to safely cover the contribution-year boundary
+    buffer_start = github_start - datetime.timedelta(days=14)
+
+    print(f"GitHub window: {github_start} (Sunday) → {today}  [{(today - github_start).days + 1} days]")
+
+    # Query A: github_start → today (current contribution year slice)
+    print(f"GraphQL A: {github_start} → {today}")
+    batch_a = graphql_range(username, token, github_start, today)
     print(f"  → {len(batch_a)} days returned")
 
-    # Fire second query only if first didn't cover the full window
-    batch_b = {}
-    if len(batch_a) < 350:
-        print(f"GraphQL B (gap fill): {prev_start} → {start_365}")
-        batch_b = graphql_range(username, token, prev_start, start_365)
-        print(f"  → {len(batch_b)} additional days")
+    # Query B: always run to cover previous contribution year (Oct→Oct boundary)
+    print(f"GraphQL B (boundary fill): {buffer_start} → {github_start}")
+    batch_b = graphql_range(username, token, buffer_start, github_start)
+    print(f"  → {len(batch_b)} additional days")
 
-    combined = {**batch_b, **batch_a}   # A wins on overlap
+    combined = {**batch_b, **batch_a}   # A wins on any overlap
 
     if not combined:
         return None
 
-    # Build the exact 365-day list — today is ALWAYS the last entry
+    # Build the exact day-by-day list for GitHub's window: github_start → today
+    total_days = (today - github_start).days + 1
     days = []
-    for i in range(365):
-        d  = start_365 + datetime.timedelta(days=i)
+    for i in range(total_days):
+        d  = github_start + datetime.timedelta(days=i)
         ds = d.strftime("%Y-%m-%d")
         days.append({"date": ds, "count": combined.get(ds, 0)})
 
     total = sum(d["count"] for d in days)
     print(f"GraphQL: {total} contributions over {len(days)} days "
-          f"({start_365} → {today})")
+          f"({github_start} → {today})  ← matches GitHub heatmap exactly")
     return days
+
 
 
 # ── HTML scraper fallback ─────────────────────────────────────────────────────
