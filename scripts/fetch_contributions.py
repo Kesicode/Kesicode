@@ -349,7 +349,7 @@ if __name__ == "__main__":
 
     print(
         f"\n✓ wrote {OUT_PATH}\n"
-        f"  total  : {data['total_contributions']} contributions in 365 days\n"
+        f"  total  : {data['total_contributions']} contributions in the last year\n"
         f"  range  : {data['range']['start']} → {data['range']['end']}\n"
         f"  best   : {data['best_day']['date']} ({data['best_day']['count']} contribs)\n"
         f"  streak : current {data['current_streak']['length']} days, "

@@ -147,7 +147,7 @@ batch   = doubled[idx : idx + BATCH_SIZE]
 print(f"\nRotation: repos {idx+1}–{idx+len(batch)} of {total}")
 print(f"This run: {[r['name'] for r in batch]}\n")
 
-touched = skipped = errors = 0
+touched = errors = 0
 for repo in batch:
     name   = repo["name"]
     branch = repo["branch"]

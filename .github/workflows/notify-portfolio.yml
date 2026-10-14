@@ -1,8 +1,10 @@
 name: Notify portfolio site
 
 # Fires after the main profile art workflow succeeds.
-# Sends a repository_dispatch event to Kesicode.github.io so it immediately
-# pulls the freshly-updated contributions.json.
+# Does two things:
+#   1. Sends a repository_dispatch event to Kesicode.github.io (if it listens).
+#   2. Directly pushes data/contributions.json → Kesicode.github.io/contributions.json
+#      via the GitHub Contents API so the portfolio site always shows current data.
 #
 # REQUIRES: GH_PAT secret with "repo" scope — same secret already used here.
 
@@ -16,20 +18,88 @@ permissions:
   contents: read
 
 jobs:
-  dispatch:
+  sync-portfolio:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger portfolio sync
+      - name: Checkout profile repo to get fresh contributions.json
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Push contributions.json to Kesicode.github.io
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          if [ -n "${{ secrets.GH_PAT }}" ]; then
+          if [ -z "$GH_PAT" ]; then
+            echo "⚠ GH_PAT not set — skipping direct data sync."
+            exit 0
+          fi
+
+          JSON_FILE="data/contributions.json"
+          TARGET_REPO="Kesicode/Kesicode.github.io"
+          TARGET_PATH="contributions.json"
+          API_BASE="https://api.github.com"
+
+          # Base64-encode the local file content
+          CONTENT=$(base64 -w 0 "$JSON_FILE")
+
+          # Get current SHA of the file in target repo (needed to update it)
+          EXISTING=$(curl -s \
+            -H "Authorization: Bearer $GH_PAT" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "$API_BASE/repos/$TARGET_REPO/contents/$TARGET_PATH")
+
+          SHA=$(echo "$EXISTING" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('sha',''))" 2>/dev/null || true)
+
+          # Build PUT payload
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          if [ -n "$SHA" ]; then
+            PAYLOAD=$(python3 -c "
+          import json, sys
+          print(json.dumps({
+            'message': 'chore: sync contribution data from Kesicode/Kesicode [$TIMESTAMP] [skip ci]',
+            'content': sys.argv[1],
+            'sha':     sys.argv[2],
+            'branch':  'main'
+          }))" "$CONTENT" "$SHA")
+          else
+            PAYLOAD=$(python3 -c "
+          import json, sys
+          print(json.dumps({
+            'message': 'chore: sync contribution data from Kesicode/Kesicode [$TIMESTAMP] [skip ci]',
+            'content': sys.argv[1],
+            'branch':  'main'
+          }))" "$CONTENT")
+          fi
+
+          RESPONSE=$(curl -s -o /tmp/put_resp.json -w "%{http_code}" -X PUT \
+            -H "Authorization: Bearer $GH_PAT" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -H "Content-Type: application/json" \
+            --data "$PAYLOAD" \
+            "$API_BASE/repos/$TARGET_REPO/contents/$TARGET_PATH")
+
+          if [[ "$RESPONSE" == "200" || "$RESPONSE" == "201" ]]; then
+            echo "✓ contributions.json pushed to $TARGET_REPO (HTTP $RESPONSE)"
+          else
+            echo "✗ Push failed (HTTP $RESPONSE):"
+            cat /tmp/put_resp.json
+            exit 1
+          fi
+
+      - name: Also dispatch event (future-proofing)
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          if [ -n "$GH_PAT" ]; then
             curl -s -X POST \
               -H "Accept: application/vnd.github+json" \
-              -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
+              -H "Authorization: Bearer $GH_PAT" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
               https://api.github.com/repos/Kesicode/Kesicode.github.io/dispatches \
               -d '{"event_type":"profile-data-updated","client_payload":{"source":"Kesicode/Kesicode"}}'
             echo "✓ Dispatched profile-data-updated to Kesicode.github.io"
-          else
-            echo "⚠ GH_PAT secret not set; relying on Kesicode.github.io automated cron sync."
           fi

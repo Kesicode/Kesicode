@@ -51,24 +51,38 @@ def level_for(count):
 
 
 def build_grid(days):
+    """
+    Build a week-column grid from a list of {date, count} dicts.
+
+    Each column is a 7-element list (Sun=0 … Sat=6).  Days are placed by
+    computing their exact offset from the grid start (Sunday of first week),
+    so the function is robust even if dates have gaps.
+    """
     first = datetime.date.fromisoformat(days[0]["date"])
-    lead_pad = (first.weekday() + 1) % 7  # sunday=0
-    grid = []
-    col = [None] * lead_pad
-    for d in days:
-        date = datetime.date.fromisoformat(d["date"])
-        weekday = (date.weekday() + 1) % 7
-        while len(col) < weekday:
-            col.append(None)
-        col.append((d["date"], d["count"], level_for(d["count"])))
-        if len(col) == 7:
-            grid.append(col)
-            col = []
-    if col:
-        while len(col) < 7:
-            col.append(None)
-        grid.append(col)
+    lead_pad = (first.weekday() + 1) % 7   # days since Sunday for first date
+    grid_start = first - datetime.timedelta(days=lead_pad)  # the Sunday
+
+    # Build a date → day-data lookup for O(1) access
+    day_map = {d["date"]: d for d in days}
+
+    last = datetime.date.fromisoformat(days[-1]["date"])
+    total_days = (last - grid_start).days + 1
+    n_cols = (total_days + 6) // 7
+
+    grid = [[None] * 7 for _ in range(n_cols)]
+
+    for i in range(total_days):
+        d = grid_start + datetime.timedelta(days=i)
+        ds = d.isoformat()
+        col = i // 7
+        row = i % 7
+        if ds in day_map:
+            entry = day_map[ds]
+            grid[col][row] = (ds, entry["count"], level_for(entry["count"]))
+        # else: leave as None (padding / gap)
+
     return grid
+
 
 
 def render(data):
