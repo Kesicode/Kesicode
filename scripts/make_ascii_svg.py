@@ -23,21 +23,22 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, "..", "source-prepped.png")
 OUT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(HERE, "..", "kesi-ascii.svg")
 
-COLS = 160          # more columns = sharper horizontal detail
+COLS = 180          # more columns = sharper horizontal detail (illustration has clean lines)
 CELL_W = 3.2
 CELL_H = 5.46
 # ROWS: compensate for monospace cell aspect ratio so a square source stays square.
 # Each character is CELL_H/CELL_W ≈ 1.71× taller than wide, so we need fewer rows.
 # Multiply by source aspect (≈1.0 for our portrait) — NO extra stretch factor.
-ROWS = int(COLS * CELL_W / CELL_H)            # ≈ 94 rows → square-ish canvas
-RAMP = " .`',:;-=+*iIcsCS#%@"  # 22-level ramp: more gradation in mid-tones & shadows
+ROWS = int(COLS * CELL_W / CELL_H)            # ≈ 105 rows → square-ish canvas
+RAMP = " .`'^,:;~-=+*iIcsoe0S#%&@"  # 26-level ramp: more density in shadows for hair detail
 
-# push contrast and gamma hard so facial features fill their character slots
-CONTRAST   = 1.55   # strong global contrast to make edges pop
+# push contrast and gamma so facial features fill their character slots
+CONTRAST   = 1.65   # stronger contrast for illustration (flat tones need more push)
 BRIGHTNESS = 1.0
-GAMMA      = 0.78   # < 1.0 darkens midtones → face fills more of the ramp's dark half
-SHARPEN    = True   # unsharp-mask to crisp up glasses frames and hair edges
-WHITE_FLOOR = 0.72  # luminance above this → blank (lower = fewer blank spots on face)
+GAMMA      = 0.72   # < 1.0 darkens midtones → skin maps to mid-ramp chars, not blank
+SHARPEN    = True   # unsharp-mask to crisp up hair strands and face edges
+WHITE_FLOOR = 0.78  # luminance above this → blank (background and bright cheeks stay clean)
+
 
 PAD        = 20
 TITLEBAR_H = 30
