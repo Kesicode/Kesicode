@@ -1,21 +1,21 @@
 <div align="center">
 
+<h3><code>kesi@github ~ $ whoami</code></h3>
+
+<!-- hero: monochrome ASCII portrait beside the 3D rocking wordmark -->
+<table>
+<tr>
+<td valign="top"><img src="./kesi-ascii.svg" width="338" height="340" alt="KASHINADH — ASCII portrait" /></td>
+<td valign="top"><img src="./wordmark.svg" width="488" height="340" alt="KESI — 3D ASCII wordmark" /></td>
+</tr>
+</table>
+
+<br>
+
 <h3><code>kesi@github ~ $ ./contributions.sh</code></h3>
 
 <!-- animated contribution graph: real data -->
 <img src="./contrib-heatmap.svg" width="860" alt="Kesicode's GitHub contribution graph" />
-
-<br>
-
-<h3><code>kesi@github ~ $ ./stats.sh</code></h3>
-
-<!-- animated stats & streak card: real data, auto-refreshed daily -->
-<table>
-<tr>
-<td valign="top"><img src="./kesi-ascii.svg" width="420" alt="KASHINADH — ASCII portrait" /></td>
-<td valign="top"><img src="./stats.svg" width="420" alt="Kesicode GitHub stats — auto-refreshed daily" /></td>
-</tr>
-</table>
 
 <br>
 
