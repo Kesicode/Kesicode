@@ -1,26 +1,21 @@
 <div align="center">
 
-<h3><code>kesi@github ~ $ neofetch</code></h3>
+<h3><code>kesi@github ~ $ whoami --info</code></h3>
 
-<!-- hero: neofetch info card beside 3D wordmark -->
+<!-- hero: monochrome ASCII portrait beside neofetch info card -->
 <table>
 <tr>
+<td valign="top"><img src="./kesi-ascii.svg" width="338" height="340" alt="KASHINADH — ASCII portrait" /></td>
 <td valign="top"><img src="./info-card.svg" width="335" height="340" alt="KASHINADH — Info Card" /></td>
-<td valign="top"><img src="./wordmark.svg" width="488" height="340" alt="KESI — 3D ASCII wordmark" /></td>
 </tr>
 </table>
 
 <br>
 
-<h3><code>kesi@github ~ $ ./stats.sh</code></h3>
+<h3><code>kesi@github ~ $ ./contributions.sh</code></h3>
 
-<!-- animated stats & streak card: real data, auto-refreshed daily -->
-<table>
-<tr>
-<td valign="top"><img src="./kesi-ascii.svg" width="420" alt="KASHINADH — ASCII portrait" /></td>
-<td valign="top"><img src="./stats.svg" width="420" alt="Kesicode GitHub stats — auto-refreshed daily" /></td>
-</tr>
-</table>
+<!-- animated contribution graph: real data -->
+<img src="./contrib-heatmap.svg" width="860" alt="Kesicode's GitHub contribution graph" />
 
 <br>
 
