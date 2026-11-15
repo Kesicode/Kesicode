@@ -1,9 +1,14 @@
 <div align="center">
 
-<h3><code>kesi@github ~ $ ./contributions.sh</code></h3>
+<h3><code>kesi@github ~ $ neofetch</code></h3>
 
-<!-- animated contribution graph: real data -->
-<img src="./contrib-heatmap.svg" width="860" alt="Kesicode's GitHub contribution graph" />
+<!-- hero: neofetch info card beside 3D wordmark -->
+<table>
+<tr>
+<td valign="top"><img src="./info-card.svg" width="335" height="340" alt="KASHINADH — Info Card" /></td>
+<td valign="top"><img src="./wordmark.svg" width="488" height="340" alt="KESI — 3D ASCII wordmark" /></td>
+</tr>
+</table>
 
 <br>
 
